@@ -1,0 +1,1076 @@
+<?php
+// ==========================================
+// 1. SERVER-SIDE SCRAPER & BOT SHIELD
+// ==========================================
+if (isset($_SERVER['HTTP_USER_AGENT'])) {
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    // Block command-line HTTP clients and common scrapers
+    if (preg_match('/(curl|PostmanRuntime|wget|python|scrape|httpclient|libwww|headlesschrome)/i', $user_agent)) {
+        http_response_code(403);
+        die("Access Denied: Automated tools and scrapers are not permitted.");
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DenguePrimaryCare AI - CPG 4th Edition (2026) Decision Support</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dengue: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#16a34a',
+              600: '#15803d',
+              700: '#166534',
+              800: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- ==========================================
+       2. CLIENT-SIDE ANTI-SELECTION & STYLING
+       ========================================== -->
+  <style>
+    /* Prevent text selection across the UI */
+    body {
+      -webkit-user-select: none; /* Safari */
+      -moz-user-select: none;    /* Firefox */
+      -ms-user-select: none;     /* IE10+/Edge */
+      user-select: none;         /* Standard */
+    }
+
+    /* Keep form controls selectable and editable for doctors */
+    input, textarea, select {
+      -webkit-user-select: auto !important;
+      -moz-user-select: auto !important;
+      -ms-user-select: auto !important;
+      user-select: auto !important;
+    }
+
+    .flow-node { transition: all 0.2s ease-in-out; }
+    .flow-node:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+    .badge-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+  </style>
+
+  <!-- ==========================================
+       3. ANTI-TAMPER & DEVTOOLS DEFENSE SCRIPT
+       ========================================== -->
+  <script>
+    // A. Disable Context Menu (Right Click)
+    document.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      return false;
+    });
+
+    // B. Block Inspection & Source View Shortcuts (Windows & macOS)
+    document.addEventListener('keydown', function (e) {
+      // F12
+      if (e.key === 'F12' || e.keyCode === 123) {
+        e.preventDefault();
+        return false;
+      }
+      
+      const isCtrlOrCmd = e.ctrlKey || e.metaKey;
+
+      // Ctrl/Cmd + U (View Source)
+      if (isCtrlOrCmd && (e.key === 'u' || e.key === 'U' || e.keyCode === 85)) {
+        e.preventDefault();
+        return false;
+      }
+
+      // Ctrl/Cmd + Shift + I (Inspect Elements)
+      if (isCtrlOrCmd && e.shiftKey && (e.key === 'i' || e.key === 'I' || e.keyCode === 73)) {
+        e.preventDefault();
+        return false;
+      }
+
+      // Ctrl/Cmd + Shift + J (Developer Tools Console)
+      if (isCtrlOrCmd && e.shiftKey && (e.key === 'j' || e.key === 'J' || e.keyCode === 74)) {
+        e.preventDefault();
+        return false;
+      }
+
+      // Ctrl/Cmd + Shift + C (Element Inspector)
+      if (isCtrlOrCmd && e.shiftKey && (e.key === 'c' || e.key === 'C' || e.keyCode === 67)) {
+        e.preventDefault();
+        return false;
+      }
+
+      // Ctrl/Cmd + S (Save Page)
+      if (isCtrlOrCmd && (e.key === 's' || e.key === 'S' || e.keyCode === 83)) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    // C. Prevent dragging of images/assets
+    document.addEventListener('dragstart', function (e) {
+      if (e.target.tagName === 'IMG') {
+        e.preventDefault();
+      }
+    });
+
+    // D. Anti-Debugging Loop (Triggers infinite pause if DevTools opens)
+    setInterval(function() {
+      (function() {
+        return false;
+      }['constructor']('debugger')());
+    }, 100);
+  </script>
+</head>
+
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- ==========================================
+       4. NOSCRIPT SHIELD (BLOCK VIEW WITHOUT JS)
+       ========================================== -->
+  <noscript>
+    <style>
+      #app-root, header, main { display: none !important; }
+      body { background-color: #f8fafc; }
+    </style>
+    <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+      <div class="bg-white border border-rose-200 rounded-2xl p-8 max-w-md shadow-lg">
+        <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+        </div>
+        <h1 class="text-lg font-bold text-slate-900 mb-2">JavaScript Execution Required</h1>
+        <p class="text-xs text-slate-600 leading-relaxed mb-4">
+          This primary care clinical decision support tool contains clinical logic and triage algorithms. Please enable JavaScript in your browser settings to proceed.
+        </p>
+      </div>
+    </div>
+  </noscript>
+
+  <div id="app-root" class="flex-1 flex flex-col">
+    <!-- TOP CLINICAL HEADER -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="bg-rose-600 text-white p-2 rounded-lg shadow">
+            <i data-lucide="shield-alert" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-xl font-bold tracking-tight text-slate-900">DengueCare Primary Suite</h1>
+              <span class="bg-rose-100 text-rose-800 text-xs font-semibold px-2.5 py-0.5 rounded border border-rose-200">CPG 4th Ed. 2026</span>
+            </div>
+            <p class="text-xs text-slate-500">Ministry of Health Malaysia • Primary Care & Outpatient Triage Engine</p>
+          </div>
+        </div>
+        
+        <!-- NAVIGATION TABS -->
+        <nav class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs sm:text-sm font-medium">
+          <button onclick="switchTab('triage')" id="tab-btn-triage" class="px-3 py-1.5 rounded-lg bg-white shadow-sm text-slate-900 flex items-center gap-1.5 transition">
+            <i data-lucide="git-branch" class="w-4 h-4 text-emerald-600"></i> Flowchart & Triage
+          </button>
+          <button onclick="switchTab('labs')" id="tab-btn-labs" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
+            <i data-lucide="flask-conical" class="w-4 h-4 text-sky-600"></i> Labs & Red Flags
+          </button>
+          <button onclick="switchTab('fluid')" id="tab-btn-fluid" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
+            <i data-lucide="droplet" class="w-4 h-4 text-blue-600"></i> 48h Fluid Quota
+          </button>
+          <button onclick="switchTab('reasoning')" id="tab-btn-reasoning" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
+            <i data-lucide="brain" class="w-4 h-4 text-purple-600"></i> Clinical Reasoning
+          </button>
+          <button onclick="switchTab('homecare')" id="tab-btn-homecare" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
+            <i data-lucide="printer" class="w-4 h-4 text-amber-600"></i> Patient Leaflet
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <!-- MAIN CLINICAL CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
+
+      <!-- ==================== TAB 1: FLOWCHART & TRIAGE ==================== -->
+      <section id="tab-content-triage" class="space-y-6">
+        
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="workflow" class="w-5 h-5 text-emerald-600"></i>
+                Systematic Primary Care Triage Flowchart (Appendix 7, CPG 2026)
+              </h2>
+              <p class="text-xs text-slate-500">Stepwise pathway connecting Malaysian Triage Scale (MTS) to PAHO Groups A, B1, B2, and C</p>
+            </div>
+            <span class="text-xs font-mono bg-slate-100 text-slate-600 px-2.5 py-1 rounded">Interactive Guide</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div class="border-2 border-emerald-500 bg-emerald-50/50 rounded-xl p-3.5 relative flow-node">
+              <span class="absolute -top-2.5 left-3 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Step 1: First Ask/Look</span>
+              <h4 class="font-bold text-sm text-slate-900 mt-1">Fever & Primary Triage</h4>
+              <p class="text-xs text-slate-600 mt-1">Fever onset, outbreak area, ABCD, and <b>CCTVR</b> (Colour, CRT, Temp, Volume, Rate).</p>
+              <div class="mt-2 text-[11px] bg-white p-2 rounded border border-emerald-200">
+                <span class="text-rose-600 font-bold">Life-Threatening?</span> CRT &gt;3s, SBP &lt;90, cyanosis, active bleed.
+              </div>
+            </div>
+
+            <div class="border-2 border-amber-500 bg-amber-50/50 rounded-xl p-3.5 relative flow-node">
+              <span class="absolute -top-2.5 left-3 bg-amber-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Step 2: Second Touch</span>
+              <h4 class="font-bold text-sm text-slate-900 mt-1">Warning Signs & Phase</h4>
+              <p class="text-xs text-slate-600 mt-1">Check critical phase (defervescence D3-7) and presence of 10 classic Warning Signs.</p>
+              <div class="mt-2 text-[11px] bg-white p-2 rounded border border-amber-200">
+                Abdominal pain, &gt;3x vomit, fluid leak, postural hypotension, HCT &ge;20% rise with PLT drop.
+              </div>
+            </div>
+
+            <div class="border-2 border-sky-500 bg-sky-50/50 rounded-xl p-3.5 relative flow-node">
+              <span class="absolute -top-2.5 left-3 bg-sky-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Step 3: Risk Modifiers</span>
+              <h4 class="font-bold text-sm text-slate-900 mt-1">Comorbidity & Social</h4>
+              <p class="text-xs text-slate-600 mt-1">Pregnancy, age &ge;65, obesity (BMI &gt;27.5), DM, HTN, CKD, heart disease, living alone.</p>
+              <div class="mt-2 text-[11px] bg-white p-2 rounded border border-sky-200">
+                Low threshold for hospital admission even without overt warning signs.
+              </div>
+            </div>
+
+            <div class="border-2 border-purple-500 bg-purple-50/50 rounded-xl p-3.5 relative flow-node">
+              <span class="absolute -top-2.5 left-3 bg-purple-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Step 4: Disposition</span>
+              <h4 class="font-bold text-sm text-slate-900 mt-1">Classification & Plan</h4>
+              <p class="text-xs text-slate-600 mt-1">Assign PAHO Group (A, B1, B2, C), trigger Act 342 notification, provide monitoring chart.</p>
+              <div class="mt-2 text-[11px] bg-white p-2 rounded border border-purple-200">
+                <b>Notification:</b> Mandatory within 24 hours (penalty up to RM10,000 / 2 yrs jail).
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORM AND DISPOSITION PANELS -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-5">
+            <div class="flex items-center justify-between border-b pb-3">
+              <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                <i data-lucide="clipboard-pen" class="w-4 h-4 text-slate-600"></i> Primary Care Clinical Assessment Form
+              </h3>
+              <button onclick="resetTriageForm()" class="text-xs text-slate-500 hover:text-rose-600 flex items-center gap-1">
+                <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Clear
+              </button>
+            </div>
+
+            <!-- Demographics -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+              <div>
+                <label class="block font-medium text-slate-700 mb-1">Age (Years)</label>
+                <input type="number" id="in-age" value="32" class="w-full px-2.5 py-1.5 border rounded-lg focus:ring-1 focus:ring-emerald-500" oninput="runEvaluation()">
+              </div>
+              <div>
+                <label class="block font-medium text-slate-700 mb-1">Gender</label>
+                <select id="in-gender" class="w-full px-2.5 py-1.5 border rounded-lg focus:ring-1 focus:ring-emerald-500" onchange="runEvaluation()">
+                  <option value="male">Male (Base HCT 46%)</option>
+                  <option value="female">Female (Base HCT 40%)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-medium text-slate-700 mb-1">Weight (kg)</label>
+                <input type="number" id="in-weight" value="65" class="w-full px-2.5 py-1.5 border rounded-lg focus:ring-1 focus:ring-emerald-500" oninput="runEvaluation()">
+              </div>
+              <div>
+                <label class="block font-medium text-slate-700 mb-1">Day of Illness</label>
+                <input type="number" id="in-day" value="4" min="1" max="14" class="w-full px-2.5 py-1.5 border rounded-lg focus:ring-1 focus:ring-emerald-500" oninput="runEvaluation()">
+              </div>
+            </div>
+
+            <!-- Hemodynamics & CCTVR -->
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+              <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center justify-between">
+                <span>Haemodynamics & CCTVR (Perfusion Assessment)</span>
+                <span class="text-[10px] text-slate-500 font-normal">WHO Standard: CRT index finger 10s press</span>
+              </h4>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <div>
+                  <label class="block font-medium text-slate-700 mb-1">Systolic BP (mmHg)</label>
+                  <input type="number" id="in-sbp" value="114" class="w-full px-2.5 py-1.5 border rounded-lg bg-white" oninput="runEvaluation()">
+                </div>
+                <div>
+                  <label class="block font-medium text-slate-700 mb-1">Diastolic BP (mmHg)</label>
+                  <input type="number" id="in-dbp" value="78" class="w-full px-2.5 py-1.5 border rounded-lg bg-white" oninput="runEvaluation()">
+                </div>
+                <div>
+                  <label class="block font-medium text-slate-700 mb-1">Pulse Rate (bpm)</label>
+                  <input type="number" id="in-hr" value="84" class="w-full px-2.5 py-1.5 border rounded-lg bg-white" oninput="runEvaluation()">
+                </div>
+                <div>
+                  <label class="block font-medium text-slate-700 mb-1">Capillary Refill (CRT)</label>
+                  <select id="in-crt" class="w-full px-2.5 py-1.5 border rounded-lg bg-white" onchange="runEvaluation()">
+                    <option value="normal">&le; 3 seconds (Normal)</option>
+                    <option value="delayed">&gt; 3 seconds (Hypoperfusion)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                <div>
+                  <label class="block font-medium text-slate-700 mb-1">Peripheries Temp</label>
+                  <select id="in-temp" class="w-full px-2.5 py-1.5 border rounded-lg bg-white" onchange="runEvaluation()">
+                    <option value="warm">Warm peripheries</option>
+                    <option value="cold">Cold / clammy peripheries</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block font-medium text-slate-700 mb-1">Pulse Volume</label>
+                  <select id="in-pulsevol" class="w-full px-2.5 py-1.5 border rounded-lg bg-white" onchange="runEvaluation()">
+                    <option value="good">Good / Full Volume</option>
+                    <option value="low">Low / Thready / Absent</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block font-medium text-slate-700 mb-1">Urine Output (past 6h)</label>
+                  <select id="in-urine" class="w-full px-2.5 py-1.5 border rounded-lg bg-white" onchange="runEvaluation()">
+                    <option value="adequate">&ge; 4-6 times/day (&gt;0.5ml/kg/h)</option>
+                    <option value="reduced">Reduced / Absent for 4-6 hrs</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Laboratory -->
+            <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+              <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide">Primary Care POCT / Laboratory Values</h4>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <div>
+                  <label class="block font-medium text-slate-700 mb-1">HCT (%)</label>
+                  <input type="number" id="in-hct" value="42" step="0.5" class="w-full px-2.5 py-1.5 border rounded-lg bg-white" oninput="runEvaluation()">
+                </div>
+                <div>
+                  <label class="block font-medium text-slate-700 mb-1">Platelets (x10⁹/L)</label>
+                  <input type="number" id="in-plt" value="128" class="w-full px-2.5 py-1.5 border rounded-lg bg-white" oninput="runEvaluation()">
+                </div>
+                <div>
+                  <label class="block font-medium text-slate-700 mb-1">WCC (x10⁹/L)</label>
+                  <input type="number" id="in-wcc" value="3.4" step="0.1" class="w-full px-2.5 py-1.5 border rounded-lg bg-white" oninput="runEvaluation()">
+                </div>
+                <div>
+                  <label class="block font-medium text-slate-700 mb-1">AST / ALT (U/L)</label>
+                  <input type="number" id="in-ast" value="48" class="w-full px-2.5 py-1.5 border rounded-lg bg-white" oninput="runEvaluation()">
+                </div>
+              </div>
+            </div>
+
+            <!-- Warning Signs Checklist -->
+            <div>
+              <h4 class="text-xs font-bold text-rose-700 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+                <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> CPG Warning Signs (Critical Phase Predictors)
+              </h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <label class="flex items-center gap-2 p-2 bg-slate-50 border rounded-lg hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="ws-abd" class="rounded text-rose-600 focus:ring-rose-500" onchange="runEvaluation()">
+                  <span>Intense abdominal pain / tenderness</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 bg-slate-50 border rounded-lg hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="ws-vomit" class="rounded text-rose-600 focus:ring-rose-500" onchange="runEvaluation()">
+                  <span>Persistent vomiting (&gt;3 times/day)</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 bg-slate-50 border rounded-lg hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="ws-lethargy" class="rounded text-rose-600 focus:ring-rose-500" onchange="runEvaluation()">
+                  <span>Lethargy, restlessness, or confusion</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 bg-slate-50 border rounded-lg hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="ws-bleed" class="rounded text-rose-600 focus:ring-rose-500" onchange="runEvaluation()">
+                  <span>Mucosal bleeding (gums, nose, menorrhagia)</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 bg-slate-50 border rounded-lg hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="ws-fluid" class="rounded text-rose-600 focus:ring-rose-500" onchange="runEvaluation()">
+                  <span>Fluid accumulation (ascites, effusion, GB edema)</span>
+                </label>
+                <label class="flex items-center gap-2 p-2 bg-slate-50 border rounded-lg hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="ws-liver" class="rounded text-rose-600 focus:ring-rose-500" onchange="runEvaluation()">
+                  <span>Hepatomegaly (Liver &gt; 2 cm tender)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Comorbidities -->
+            <div>
+              <h4 class="text-xs font-bold text-sky-800 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+                <i data-lucide="heart-pulse" class="w-3.5 h-3.5"></i> Special Populations & High-Risk Modifiers (Group B1)
+              </h4>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                <label class="flex items-center gap-1.5 p-1.5 bg-slate-50 border rounded hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="co-preg" class="rounded text-sky-600" onchange="runEvaluation()">
+                  <span>Pregnancy</span>
+                </label>
+                <label class="flex items-center gap-1.5 p-1.5 bg-slate-50 border rounded hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="co-dm" class="rounded text-sky-600" onchange="runEvaluation()">
+                  <span>Diabetes Mellitus</span>
+                </label>
+                <label class="flex items-center gap-1.5 p-1.5 bg-slate-50 border rounded hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="co-htn" class="rounded text-sky-600" onchange="runEvaluation()">
+                  <span>Hypertension</span>
+                </label>
+                <label class="flex items-center gap-1.5 p-1.5 bg-slate-50 border rounded hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="co-ckd" class="rounded text-sky-600" onchange="runEvaluation()">
+                  <span>CKD / Dialysis</span>
+                </label>
+                <label class="flex items-center gap-1.5 p-1.5 bg-slate-50 border rounded hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="co-heart" class="rounded text-sky-600" onchange="runEvaluation()">
+                  <span>Heart Failure / IHD</span>
+                </label>
+                <label class="flex items-center gap-1.5 p-1.5 bg-slate-50 border rounded hover:bg-slate-100 cursor-pointer">
+                  <input type="checkbox" id="co-social" class="rounded text-sky-600" onchange="runEvaluation()">
+                  <span>Social Risk / Lives alone</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- DISPOSITION OUTPUT -->
+          <div class="lg:col-span-5 space-y-4">
+            <div id="disposition-card" class="bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-5 shadow-sm transition-all duration-300">
+              <div class="flex items-center justify-between">
+                <span id="disposition-badge" class="bg-emerald-600 text-white font-bold text-xs uppercase px-2.5 py-1 rounded-md">
+                  Group A • Outpatient Care
+                </span>
+                <span id="mts-level" class="text-xs font-semibold text-emerald-800">MTS Level 5 (Green)</span>
+              </div>
+
+              <h3 id="disposition-title" class="text-lg font-extrabold text-slate-900 mt-3">
+                Uncomplicated Dengue (Without Warning Signs)
+              </h3>
+
+              <p id="disposition-desc" class="text-xs text-slate-700 mt-2 leading-relaxed">
+                Patient is hemodynamically stable with adequate oral fluid tolerance and no clinical warning signs or acute plasma leakage. Suitable for daily primary care follow-up.
+              </p>
+
+              <div class="mt-4 pt-4 border-t border-emerald-200">
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Immediate Primary Care Action Plan</h4>
+                <ul id="action-list" class="text-xs text-slate-700 space-y-2">
+                  <li class="flex items-start gap-2">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                    <span><b>Oral Hydration:</b> 200 ml/hr while awake (juice, ORS, soup, coconut water). Avoid plain water alone.</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                    <span><b>Daily Primary Care Review:</b> Clinical assessment, CCTVR, and serial FBC daily until afebrile for 48h.</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                    <span><b>Medication Check:</b> Paracetamol PRN &le;4g/day. Discontinue NSAIDs, aspirin, and steroids.</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                    <span><b>Mandatory Notification:</b> Notify nearest District Health Office (PKD) under Act 342 within 24h.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="mt-4 p-3 bg-white/80 rounded-xl border border-slate-200 grid grid-cols-3 gap-2 text-center text-xs">
+                <div>
+                  <span class="text-[10px] text-slate-500 block">Pulse Pressure</span>
+                  <span id="calc-pp" class="font-bold text-slate-800 text-sm">36 mmHg</span>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-500 block">Mean Arterial (MAP)</span>
+                  <span id="calc-map" class="font-bold text-slate-800 text-sm">90 mmHg</span>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-500 block">HCT Deviation</span>
+                  <span id="calc-hct-diff" class="font-bold text-slate-800 text-sm">-8.7%</span>
+                </div>
+              </div>
+
+              <div class="mt-4 p-2.5 bg-rose-50 border border-rose-200 rounded-lg flex items-center justify-between text-[11px] text-rose-800">
+                <span class="flex items-center gap-1.5 font-medium">
+                  <i data-lucide="bell-ring" class="w-3.5 h-3.5 text-rose-600"></i>
+                  Disease Notification (Act 342): Required
+                </span>
+                <span class="font-bold">&lt; 24 Hours</span>
+              </div>
+            </div>
+
+            <!-- Rapid Combo Test (RDT) -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-3">
+              <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5">
+                <i data-lucide="microscope" class="w-4 h-4 text-sky-600"></i> Rapid Combo Test (RDT) Interpreter
+              </h4>
+              <div class="grid grid-cols-3 gap-2 text-xs">
+                <div>
+                  <label class="block text-slate-600 text-[10px] mb-1">NS1 Antigen</label>
+                  <select id="rdt-ns1" class="w-full px-2 py-1 border rounded bg-white" onchange="interpretSerology()">
+                    <option value="pos">Positive (+)</option>
+                    <option value="neg">Negative (-)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-slate-600 text-[10px] mb-1">IgM Antibody</label>
+                  <select id="rdt-igm" class="w-full px-2 py-1 border rounded bg-white" onchange="interpretSerology()">
+                    <option value="neg">Negative (-)</option>
+                    <option value="pos">Positive (+)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-slate-600 text-[10px] mb-1">IgG Antibody</label>
+                  <select id="rdt-igg" class="w-full px-2 py-1 border rounded bg-white" onchange="interpretSerology()">
+                    <option value="neg">Negative (-)</option>
+                    <option value="pos">Positive (+)</option>
+                  </select>
+                </div>
+              </div>
+              <div id="serology-result-box" class="p-2.5 bg-sky-50 border border-sky-200 rounded-lg text-xs text-sky-900 leading-snug">
+                <b>Acute Dengue Infection Confirmed:</b> Early primary infection indicated by positive NS1 within Day 1-5 of illness.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 2: LABS & RED FLAGS ==================== -->
+      <section id="tab-content-labs" class="hidden space-y-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b pb-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="file-spreadsheet" class="w-5 h-5 text-sky-600"></i>
+                Laboratory Reference Ranges & Primary Care Red Flag Action Matrix
+              </h2>
+              <p class="text-xs text-slate-500">Based on Chapter 7 & 8 of CPG Dengue in Adults (Fourth Edition, 2026)</p>
+            </div>
+            <span class="text-xs bg-sky-50 text-sky-700 px-3 py-1 rounded-full font-medium border border-sky-200">Point-of-Care Ready</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 uppercase tracking-wider border-b border-slate-200">
+                  <th class="p-3 font-bold">Investigation</th>
+                  <th class="p-3 font-bold">Malaysian Adult Normal Range</th>
+                  <th class="p-3 font-bold text-rose-600">Critical Red Flag Trigger</th>
+                  <th class="p-3 font-bold">Primary Care Action & Referral Threshold</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-700">
+                <tr class="hover:bg-slate-50">
+                  <td class="p-3 font-bold text-slate-900">Haematocrit (HCT)</td>
+                  <td class="p-3">• Male &le;60y: <b>46%</b><br>• Male &gt;60y: <b>42%</b><br>• Female: <b>40%</b></td>
+                  <td class="p-3 text-rose-700 font-semibold">• Rising &ge;20% above baseline<br>• Sudden drop in HCT with persistent shock</td>
+                  <td class="p-3"><b>Rise &ge;20%:</b> Severe plasma leakage. Admit and titrate IV fluid within 48h quota (Group B2).<br><b>Drop with shock:</b> Unmasks occult bleed. Urgent cross-match & PRBC transfusion (Group C).</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="p-3 font-bold text-slate-900">Platelet Count</td>
+                  <td class="p-3">150 – 400 &times; 10⁹/L</td>
+                  <td class="p-3 text-rose-700 font-semibold">• Rapid drop &lt;100 &times; 10⁹/L<br>• Severe thrombocytopenia &lt;50 &times; 10⁹/L</td>
+                  <td class="p-3"><b>&lt;100:</b> Signals entry into critical phase; intensify reviews.<br><b>&lt;50:</b> High mortality risk factor (OR 15.7).<br><span class="text-slate-500 italic">Do not give prophylactic platelet transfusion if no active bleed.</span></td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="p-3 font-bold text-slate-900">White Cell Count (WCC)</td>
+                  <td class="p-3">4.0 – 10.0 &times; 10⁹/L</td>
+                  <td class="p-3 text-rose-700 font-semibold">• Leucopenia &lt;4.0 &times; 10⁹/L (early)<br>• Leucocytosis in critical phase</td>
+                  <td class="p-3"><b>Leucopenia:</b> Diagnostic hallmark in febrile phase (AUC 0.91 in elderly).<br><b>Leucocytosis:</b> Screen for secondary bacterial sepsis or HLH.</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="p-3 font-bold text-slate-900">AST / ALT Transaminases</td>
+                  <td class="p-3">AST: 10–40 U/L<br>ALT: 7–56 U/L (AST &gt; ALT typical)</td>
+                  <td class="p-3 text-rose-700 font-semibold">• AST/ALT &ge;100 U/L on D3-4<br>• Severe hepatitis &ge;1000 U/L (DISH)</td>
+                  <td class="p-3"><b>&ge;100:</b> High plasma leak score.<br><b>&ge;1000:</b> Severe Dengue with liver failure. Discontinue paracetamol immediately, admit to hospital/ICU.</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="p-3 font-bold text-slate-900">Urine Output</td>
+                  <td class="p-3">&ge;0.5 – 1.0 ml/kg/hr<br>(Voids 4–6 times per day)</td>
+                  <td class="p-3 text-rose-700 font-semibold">• Oliguria &lt;0.5 ml/kg/hr<br>• No urine passed for 4–6 hours</td>
+                  <td class="p-3">Reflects reduced renal perfusion or AKI. Transfer for IV rehydration. In diabetics, exclude osmotic diuresis false security.</td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td class="p-3 font-bold text-slate-900">Blood Pressure & Pulse Pressure</td>
+                  <td class="p-3">Normal: SBP 100–120, PP &gt;30 mmHg</td>
+                  <td class="p-3 text-rose-700 font-semibold">• PP 20–30 mmHg (Compensated Shock)<br>• PP &lt;20 mmHg or SBP &lt;90 (Decompensated)</td>
+                  <td class="p-3"><b>Group C Emergency:</b> Resuscitate with crystalloids immediately (10–20 ml/kg). Do not delay while awaiting transfer.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 3: 48-HOUR FLUID QUOTA ==================== -->
+      <section id="tab-content-fluid" class="hidden space-y-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-5">
+          <div class="flex items-center justify-between border-b pb-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="calculator" class="w-5 h-5 text-blue-600"></i>
+                CPG 2026 Fluid Quota Calculator (Critical Phase Without Shock - Group B2)
+              </h2>
+              <p class="text-xs text-slate-500">Implements Formula: [Maintenance (Holliday-Segar) + 5% Deficit (50ml/kg)] over 48 hours with 70kg Cap</p>
+            </div>
+            <span class="text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full font-medium border border-blue-200">Weight Cap: 70 kg</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="space-y-4 text-xs">
+              <div>
+                <label class="block font-medium text-slate-700 mb-1">Patient Actual Weight (kg)</label>
+                <input type="number" id="fq-weight" value="65" class="w-full px-3 py-2 border rounded-lg" oninput="calcFluidQuota()">
+              </div>
+              <div>
+                <label class="block font-medium text-slate-700 mb-1">Patient Height (cm) (for BMI/ABW check)</label>
+                <input type="number" id="fq-height" value="168" class="w-full px-3 py-2 border rounded-lg" oninput="calcFluidQuota()">
+              </div>
+              <div>
+                <label class="block font-medium text-slate-700 mb-1">Patient Gender</label>
+                <select id="fq-gender" class="w-full px-3 py-2 border rounded-lg" onchange="calcFluidQuota()">
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-[11px] leading-relaxed">
+                <b>Important Guideline Rule:</b> Weight used for fluid calculation is strictly capped at <b>70 kg</b> to prevent fluid overload from the Revised Starling leak. In obesity (BMI &gt;27.5), Adjusted Body Weight (ABW) is applied.
+              </div>
+            </div>
+
+            <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
+              <h4 class="font-bold text-slate-800 uppercase tracking-wide">Calculated Volumes</h4>
+              <div class="flex justify-between py-1.5 border-b">
+                <span class="text-slate-600">Calculated Weight Used:</span>
+                <span id="fq-calc-wt" class="font-bold text-slate-900">65.0 kg</span>
+              </div>
+              <div class="flex justify-between py-1.5 border-b">
+                <span class="text-slate-600">Daily Maintenance (Holliday-Segar):</span>
+                <span id="fq-maint-day" class="font-bold text-slate-900">2,500 ml/day</span>
+              </div>
+              <div class="flex justify-between py-1.5 border-b">
+                <span class="text-slate-600">48h Maintenance (A):</span>
+                <span id="fq-maint-48" class="font-bold text-slate-900">5,000 ml</span>
+              </div>
+              <div class="flex justify-between py-1.5 border-b">
+                <span class="text-slate-600">5% Deficit (50ml/kg) (B):</span>
+                <span id="fq-deficit" class="font-bold text-slate-900">3,250 ml</span>
+              </div>
+              <div class="flex justify-between py-2 border-t-2 border-slate-300 text-sm font-extrabold text-blue-700">
+                <span>Total 48h Quota (Oral + IV):</span>
+                <span id="fq-total-quota">5,700 ml</span>
+              </div>
+            </div>
+
+            <div class="space-y-3 bg-blue-50/50 p-4 rounded-xl border border-blue-200 text-xs">
+              <h4 class="font-bold text-blue-900 uppercase tracking-wide">Algorithm 1 Infusion Rates</h4>
+              <p class="text-[11px] text-slate-600">Start IV Crystalloids at 3–5 ml/kg/hr for 1h, then reduce stepwise upon clinical improvement:</p>
+              <div class="space-y-2 mt-2">
+                <div class="flex justify-between p-2 bg-white rounded border">
+                  <span>R5 (5 ml/kg/hr - Initial):</span>
+                  <span id="rate-r5" class="font-mono font-bold text-slate-800">325 ml/hr</span>
+                </div>
+                <div class="flex justify-between p-2 bg-white rounded border">
+                  <span>R3 (3 ml/kg/hr - Stepdown 1):</span>
+                  <span id="rate-r3" class="font-mono font-bold text-slate-800">195 ml/hr</span>
+                </div>
+                <div class="flex justify-between p-2 bg-white rounded border">
+                  <span>R2 (2 ml/kg/hr - Stepdown 2):</span>
+                  <span id="rate-r2" class="font-mono font-bold text-slate-800">130 ml/hr</span>
+                </div>
+                <div class="flex justify-between p-2 bg-white rounded border">
+                  <span>R1 (1 ml/kg/hr - Maintenance):</span>
+                  <span id="rate-r1" class="font-mono font-bold text-slate-800">65 ml/hr</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 4: CLINICAL REASONING ==================== -->
+      <section id="tab-content-reasoning" class="hidden space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+            <div class="flex items-center gap-2 text-rose-600">
+              <i data-lucide="git-commit" class="w-5 h-5"></i>
+              <h3 class="font-bold text-sm text-slate-900">Pathophysiology: Revised Starling Law & EGL</h3>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Traditional models assumed 90% venular reabsorption. Modern physiology proves fluid leaves solely via lymphatics due to the Endothelial Glycocalyx Layer (EGL). Dengue NS1 activates heparanase and sialidases, breaking the EGL. Intravenous fluids given excessively leak directly into third spaces and will cause severe pulmonary edema during recovery phase reabsorption.
+            </p>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+            <div class="flex items-center gap-2 text-amber-600">
+              <i data-lucide="droplet-off" class="w-5 h-5"></i>
+              <h3 class="font-bold text-sm text-slate-900">Occult Bleeding vs Plasma Leakage</h3>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              Plasma leakage manifests as haemoconcentration (rising HCT &ge;20%). If a patient is in shock but HCT is unexpectedly normal or dropping, massive occult haemorrhage (retroperitoneal or GI) is occurring. Crystalloids alone will worsen hypoperfusion; emergency cross-match and packed red cells are needed.
+            </p>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+            <div class="flex items-center gap-2 text-purple-600">
+              <i data-lucide="ban" class="w-5 h-5"></i>
+              <h3 class="font-bold text-sm text-slate-900">Strictly Prohibited Medications</h3>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              NSAIDs (mefenamic acid, ibuprofen) and aspirin cause gastric mucosal ulceration and irreversible platelet dysfunction in patients with preexisting thrombocytopenia, precipitating catastrophic GI bleeding. Corticosteroids confer no clinical benefit and elevate infection risks.
+            </p>
+          </div>
+
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+            <div class="flex items-center gap-2 text-sky-600">
+              <i data-lucide="users" class="w-5 h-5"></i>
+              <h3 class="font-bold text-sm text-slate-900">Special Populations: Why Low Admission Threshold?</h3>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              In pregnancy, physiological haemodilution masks rising HCT, while resting tachycardia masks early shock. In the elderly, dengue presents atypically with lethargy and leucopenia rather than classic fever. Both groups require a very low threshold for hospital admission.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 5: PATIENT LEAFLET ==================== -->
+      <section id="tab-content-homecare" class="hidden space-y-6">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm max-w-4xl mx-auto space-y-6">
+          <div class="flex items-center justify-between border-b pb-4">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">Outpatient Dengue Home Care & Warning Leaflet</h2>
+              <p class="text-xs text-slate-500">Appendix 5B MOH CPG 2026 • Bilingual Primary Care Patient Take-Home Sheet</p>
+            </div>
+            <button onclick="window.print()" class="px-3.5 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 hover:bg-slate-800">
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i> Print Leaflet
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs leading-relaxed">
+            <div class="border rounded-xl p-4 bg-slate-50 space-y-3">
+              <div class="border-b pb-2">
+                <h3 class="font-bold text-sm text-slate-900">Home Care Advice (English)</h3>
+                <p class="text-[11px] text-slate-500">For patients suitable for outpatient management</p>
+              </div>
+              <div class="space-y-1">
+                <h4 class="font-bold text-emerald-800">WHAT TO DO:</h4>
+                <ul class="list-disc pl-4 space-y-1 text-slate-700">
+                  <li>Drink 200 ml fluid every hour while awake (ORS, fruit juice, coconut water, soup).</li>
+                  <li>Ensure you pass urine at least 4 to 6 times a day.</li>
+                  <li>Take Paracetamol for fever or pain, but <b>never exceed 4,000 mg (8 tablets of 500mg) per day</b>.</li>
+                  <li>Attend daily blood tests and doctor appointments without fail.</li>
+                </ul>
+              </div>
+              <div class="space-y-1 pt-2">
+                <h4 class="font-bold text-rose-800">WHAT TO AVOID:</h4>
+                <ul class="list-disc pl-4 space-y-1 text-slate-700">
+                  <li><b>DO NOT take NSAIDs or pain relievers</b> (Ibuprofen, Voltaren, Ponstan, Aspirin).</li>
+                  <li>DO NOT take steroids or unverified herbal extracts.</li>
+                  <li>DO NOT take intramuscular injections or cupping (bekam).</li>
+                </ul>
+              </div>
+              <div class="p-2.5 bg-rose-100/60 border border-rose-200 rounded-lg text-rose-900">
+                <h4 class="font-bold text-xs uppercase text-rose-800">DANGER SIGNS - GO TO HOSPITAL IMMEDIATELY:</h4>
+                <p class="text-[11px] mt-1">Severe stomach pain, continuous vomiting (&gt;3 times), bleeding gums/nose, black stools, fainting spells, extreme sleepiness or breathing difficulty when fever starts to subside.</p>
+              </div>
+            </div>
+
+            <div class="border rounded-xl p-4 bg-slate-50 space-y-3">
+              <div class="border-b pb-2">
+                <h3 class="font-bold text-sm text-slate-900">Nasihat Penjagaan Di Rumah (BM)</h3>
+                <p class="text-[11px] text-slate-500">Untuk pesakit yang dirawat sebagai pesakit luar</p>
+              </div>
+              <div class="space-y-1">
+                <h4 class="font-bold text-emerald-800">APA YANG PERLU DILAKUKAN:</h4>
+                <ul class="list-disc pl-4 space-y-1 text-slate-700">
+                  <li>Minum air secukupnya 200 ml setiap jam sewaktu jaga (garam hidrasi ORS, jus buah, air kelapa, sup).</li>
+                  <li>Pastikan anda membuang air kencing sekurang-kurangnya 4 hingga 6 kali sehari.</li>
+                  <li>Ambil Paracetamol jika demam, <b>tidak melebihi 4,000 mg (8 biji 500mg) sehari</b>.</li>
+                  <li>Hadir temujanji pemeriksaan darah dan doktor setiap hari.</li>
+                </ul>
+              </div>
+              <div class="space-y-1 pt-2">
+                <h4 class="font-bold text-rose-800">APA YANG MESTI DIELAKKAN:</h4>
+                <ul class="list-disc pl-4 space-y-1 text-slate-700">
+                  <li><b>JANGAN ambil ubat tahan sakit NSAID</b> seperti Ibuprofen, Voltaren, Ponstan, atau Aspirin.</li>
+                  <li>JANGAN ambil steroid, ubat tradisional, atau jus herba yang tidak disahkan.</li>
+                  <li>JANGAN ambil suntikan ke dalam otot, berbekam, atau mengurut.</li>
+                </ul>
+              </div>
+              <div class="p-2.5 bg-rose-100/60 border border-rose-200 rounded-lg text-rose-900">
+                <h4 class="font-bold text-xs uppercase text-rose-800">TANDA BAHAYA - SEGERA KE KECEMASAN HOSPITAL:</h4>
+                <p class="text-[11px] mt-1">Sakit perut yang teruk, muntah berterusan (&gt;3 kali), pendarahan gusi/hidung, najis hitam, pitam, sangat lemah atau sesak nafas apabila demam mula kebah.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- APPLICATION LOGIC ENGINE -->
+  <script>
+    function switchTab(tabId) {
+      const tabs = ['triage', 'labs', 'fluid', 'reasoning', 'homecare'];
+      tabs.forEach(t => {
+        document.getElementById(`tab-content-${t}`).classList.add('hidden');
+        const btn = document.getElementById(`tab-btn-${t}`);
+        btn.classList.remove('bg-white', 'shadow-sm', 'text-slate-900');
+        btn.classList.add('text-slate-600');
+      });
+
+      document.getElementById(`tab-content-${tabId}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      activeBtn.classList.add('bg-white', 'shadow-sm', 'text-slate-900');
+      activeBtn.classList.remove('text-slate-600');
+    }
+
+    function runEvaluation() {
+      const age = parseFloat(document.getElementById('in-age').value) || 30;
+      const gender = document.getElementById('in-gender').value;
+      const weight = parseFloat(document.getElementById('in-weight').value) || 60;
+      const day = parseInt(document.getElementById('in-day').value) || 3;
+
+      const sbp = parseFloat(document.getElementById('in-sbp').value) || 120;
+      const dbp = parseFloat(document.getElementById('in-dbp').value) || 80;
+      const hr = parseFloat(document.getElementById('in-hr').value) || 80;
+      const crt = document.getElementById('in-crt').value;
+      const temp = document.getElementById('in-temp').value;
+      const pulsevol = document.getElementById('in-pulsevol').value;
+      const urine = document.getElementById('in-urine').value;
+
+      const hct = parseFloat(document.getElementById('in-hct').value) || 40;
+      const plt = parseFloat(document.getElementById('in-plt').value) || 150;
+      const wcc = parseFloat(document.getElementById('in-wcc').value) || 5;
+      const ast = parseFloat(document.getElementById('in-ast').value) || 30;
+
+      const wsAbd = document.getElementById('ws-abd').checked;
+      const wsVomit = document.getElementById('ws-vomit').checked;
+      const wsLethargy = document.getElementById('ws-lethargy').checked;
+      const wsBleed = document.getElementById('ws-bleed').checked;
+      const wsFluid = document.getElementById('ws-fluid').checked;
+      const wsLiver = document.getElementById('ws-liver').checked;
+      const hasWarningSigns = wsAbd || wsVomit || wsLethargy || wsBleed || wsFluid || wsLiver || (urine === 'reduced');
+
+      const coPreg = document.getElementById('co-preg').checked;
+      const coDm = document.getElementById('co-dm').checked;
+      const coHtn = document.getElementById('co-htn').checked;
+      const coCkd = document.getElementById('co-ckd').checked;
+      const coHeart = document.getElementById('co-heart').checked;
+      const coSocial = document.getElementById('co-social').checked;
+      const isElderly = age >= 65;
+      const hasComorbidities = coPreg || coDm || coHtn || coCkd || coHeart || coSocial || isElderly;
+
+      const pp = sbp - dbp;
+      const map = Math.round(dbp + (pp / 3));
+      const baseHct = (gender === 'male') ? (age > 60 ? 42 : 46) : 40;
+      const hctDiffPct = (((hct - baseHct) / baseHct) * 100).toFixed(1);
+
+      document.getElementById('calc-pp').innerText = `${pp} mmHg`;
+      document.getElementById('calc-map').innerText = `${map} mmHg`;
+      document.getElementById('calc-hct-diff').innerText = `${hctDiffPct > 0 ? '+' : ''}${hctDiffPct}%`;
+
+      const isDecompensatedShock = (sbp < 90 || map < 65 || pp < 20) && (crt === 'delayed' || temp === 'cold' || pulsevol === 'low');
+      const isCompensatedShock = (sbp >= 90 && pp <= 30 && pp >= 20) || (crt === 'delayed' && temp === 'cold');
+      const isSevereOrgan = (ast >= 1000);
+
+      const card = document.getElementById('disposition-card');
+      const badge = document.getElementById('disposition-badge');
+      const mts = document.getElementById('mts-level');
+      const title = document.getElementById('disposition-title');
+      const desc = document.getElementById('disposition-desc');
+      const actionList = document.getElementById('action-list');
+
+      if (isDecompensatedShock || isCompensatedShock || isSevereOrgan) {
+        card.className = "bg-rose-50 border-2 border-rose-600 rounded-2xl p-5 shadow-sm transition-all duration-300";
+        badge.className = "bg-rose-600 text-white font-bold text-xs uppercase px-2.5 py-1 rounded-md badge-pulse";
+        badge.innerText = "Group C • Severe Dengue";
+        mts.className = "text-xs font-semibold text-rose-800";
+        mts.innerText = isDecompensatedShock ? "MTS Level 1 (Red Zone Resuscitation)" : "MTS Level 2 (Red Zone Emergency)";
+        title.innerText = isDecompensatedShock ? "Decompensated Dengue Shock / Organ Failure" : "Compensated Dengue Shock Syndrome";
+        desc.innerText = "Medical emergency. Evidence of hypoperfusion, severe plasma leakage, or critical transaminitis. Immediate resuscitation and urgent hospital ED/ICU transfer required.";
+
+        actionList.innerHTML = `
+          <li class="flex items-start gap-2 text-rose-900 font-semibold">
+            <i data-lucide="alert-octagon" class="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>Immediate Resuscitation:</b> Crystalloids ${isDecompensatedShock ? '20 ml/kg over 15-30 min' : '10 ml/kg over 1 hour'}.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <i data-lucide="alert-octagon" class="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>Occult Bleed Vigilance:</b> If HCT fails to rise or drops with ongoing shock, initiate emergency cross-match & PRBC transfusion.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <i data-lucide="alert-octagon" class="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>Emergency Call:</b> Call red-zone receiving hospital before transfer. Send clerking sheet and fluid record.</span>
+          </li>
+        `;
+      } else if (hasWarningSigns || parseFloat(hctDiffPct) >= 20) {
+        card.className = "bg-amber-50 border-2 border-amber-500 rounded-2xl p-5 shadow-sm transition-all duration-300";
+        badge.className = "bg-amber-600 text-white font-bold text-xs uppercase px-2.5 py-1 rounded-md";
+        badge.innerText = "Group B2 • Dengue with Warning Signs";
+        mts.className = "text-xs font-semibold text-amber-800";
+        mts.innerText = "MTS Level 3 (Yellow Zone Urgent)";
+        title.innerText = "Dengue with Warning Signs (Critical Phase Risk)";
+        desc.innerText = "Patient is entering or in the critical plasma leaking phase with clinical warning signs. Mandatory hospital admission for protocolised fluid titration.";
+
+        actionList.innerHTML = `
+          <li class="flex items-start gap-2 text-amber-900 font-semibold">
+            <i data-lucide="arrow-right-circle" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>Hospital Admission:</b> Transfer to hospital medical ward. Start IV crystalloids 3-5 ml/kg/hr for 1-2 hours if oral intake poor.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <i data-lucide="arrow-right-circle" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>48h Fluid Quota:</b> Keep total fluid within Maintenance + 5% deficit over 48 hours. Max weight capped at 70 kg.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <i data-lucide="arrow-right-circle" class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>Serial Labs:</b> Full blood count every 4 to 12 hours depending on haemodynamic progression.</span>
+          </li>
+        `;
+      } else if (hasComorbidities) {
+        card.className = "bg-sky-50 border-2 border-sky-500 rounded-2xl p-5 shadow-sm transition-all duration-300";
+        badge.className = "bg-sky-600 text-white font-bold text-xs uppercase px-2.5 py-1 rounded-md";
+        badge.innerText = "Group B1 • High Risk / Vulnerable";
+        mts.className = "text-xs font-semibold text-sky-800";
+        mts.innerText = "MTS Level 4 (Green Zone Observation)";
+        title.innerText = "Dengue without Warning Signs with Comorbidities";
+        desc.innerText = "No acute plasma leakage at present, but high vulnerability due to physiological risk (pregnancy, elderly, diabetes, heart/kidney disease, social factors).";
+
+        actionList.innerHTML = `
+          <li class="flex items-start gap-2 text-sky-900 font-semibold">
+            <i data-lucide="info" class="w-4 h-4 text-sky-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>Admission / Close Observation:</b> Low threshold for hospital admission. If pregnant, hospitalise regardless of signs.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-sky-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>Individualised Fluid:</b> Avoid standard boluses in heart failure or CKD to prevent premature pulmonary edema.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-sky-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>Medication Review:</b> Withhold ACEi/ARBs, SGLT2i, and metformin during acute hypovolemic dehydration.</span>
+          </li>
+        `;
+      } else {
+        card.className = "bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-5 shadow-sm transition-all duration-300";
+        badge.className = "bg-emerald-600 text-white font-bold text-xs uppercase px-2.5 py-1 rounded-md";
+        badge.innerText = "Group A • Outpatient Monitoring";
+        mts.className = "text-xs font-semibold text-emerald-800";
+        mts.innerText = "MTS Level 5 (Outpatient)";
+        title.innerText = "Uncomplicated Dengue (Without Warning Signs)";
+        desc.innerText = "Patient is stable with good oral hydration tolerance and no signs of microvascular plasma leakage. Suitable for outpatient primary care management.";
+
+        actionList.innerHTML = `
+          <li class="flex items-start gap-2">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>Oral Hydration:</b> 200 ml/hr while awake (ORS, fruit juice, coconut water, soup). Avoid plain water alone.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>Daily Follow-Up:</b> Review in clinic daily with serial FBC and CCTVR until afebrile for 48 hours.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+            <span><b>Home Care Advice:</b> Issue Appendix 5B take-home sheet and educate on red flag emergency triggers.</span>
+          </li>
+        `;
+      }
+      lucide.createIcons();
+    }
+
+    function interpretSerology() {
+      const day = parseInt(document.getElementById('in-day').value) || 3;
+      const ns1 = document.getElementById('rdt-ns1').value;
+      const igm = document.getElementById('rdt-igm').value;
+      const igg = document.getElementById('rdt-igg').value;
+      const box = document.getElementById('serology-result-box');
+
+      if (day <= 5) {
+        if (ns1 === 'pos') {
+          box.innerHTML = "<b>Acute Dengue Infection Confirmed:</b> High sensitivity with NS1 positivity in Day 1-5 of illness. Notify PKD.";
+          box.className = "p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-900 leading-snug";
+        } else if (igm === 'pos') {
+          box.innerHTML = "<b>Probable Acute Dengue:</b> IgM positive within first 5 days. Repeat RDT or verify if symptoms evolve.";
+          box.className = "p-2.5 bg-sky-50 border border-sky-200 rounded-lg text-xs text-sky-900 leading-snug";
+        } else {
+          box.innerHTML = "<b>Inconclusive / Negative:</b> NS1 and IgM negative. If clinical suspicion is high, repeat RDT in 24-48 hours. Differential diagnosis advised.";
+          box.className = "p-2.5 bg-slate-100 border border-slate-300 rounded-lg text-xs text-slate-800 leading-snug";
+        }
+      } else {
+        if (ns1 === 'pos' || igm === 'pos') {
+          box.innerHTML = "<b>Acute / Recent Dengue Infection:</b> Convalescent/critical phase seroconversion. High risk for severe dengue if entering defervescence.";
+          box.className = "p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 leading-snug";
+        } else if (igg === 'pos') {
+          box.innerHTML = "<b>Secondary Dengue Possible:</b> IgG positive alone. Proceed with high-titre IgG ELISA if available to confirm secondary infection.";
+          box.className = "p-2.5 bg-purple-50 border border-purple-200 rounded-lg text-xs text-purple-900 leading-snug";
+        } else {
+          box.innerHTML = "<b>Negative for Dengue:</b> Consider alternative diagnoses (leptospirosis, malaria, typhoid, viral hepatitis).";
+          box.className = "p-2.5 bg-slate-100 border border-slate-300 rounded-lg text-xs text-slate-800 leading-snug";
+        }
+      }
+    }
+
+    function calcFluidQuota() {
+      const actWt = parseFloat(document.getElementById('fq-weight').value) || 60;
+      const ht = parseFloat(document.getElementById('fq-height').value) || 165;
+      const gender = document.getElementById('fq-gender').value;
+
+      const bmi = actWt / ((ht / 100) * (ht / 100));
+      let calcWt = actWt;
+
+      if (bmi > 27.5) {
+        const ibw = (gender === 'male') ? 50.0 + 0.91 * (ht - 152) : 45.5 + 0.91 * (ht - 152);
+        calcWt = ibw + 0.4 * (actWt - ibw);
+      }
+
+      if (calcWt > 70) calcWt = 70;
+
+      let maintDaily = 0;
+      if (calcWt <= 10) maintDaily = calcWt * 100;
+      else if (calcWt <= 20) maintDaily = 1000 + (calcWt - 10) * 50;
+      else maintDaily = 1500 + (calcWt - 20) * 20;
+
+      const maint48 = maintDaily * 2;
+      const deficit = calcWt * 50;
+      const totalQuota = maint48 + deficit;
+
+      document.getElementById('fq-calc-wt').innerText = `${calcWt.toFixed(1)} kg ${bmi > 27.5 ? '(ABW)' : ''}`;
+      document.getElementById('fq-maint-day').innerText = `${Math.round(maintDaily).toLocaleString()} ml/day`;
+      document.getElementById('fq-maint-48').innerText = `${Math.round(maint48).toLocaleString()} ml`;
+      document.getElementById('fq-deficit').innerText = `${Math.round(deficit).toLocaleString()} ml`;
+      document.getElementById('fq-total-quota').innerText = `${Math.round(totalQuota).toLocaleString()} ml`;
+
+      document.getElementById('rate-r5').innerText = `${Math.round(calcWt * 5)} ml/hr`;
+      document.getElementById('rate-r3').innerText = `${Math.round(calcWt * 3)} ml/hr`;
+      document.getElementById('rate-r2').innerText = `${Math.round(calcWt * 2)} ml/hr`;
+      document.getElementById('rate-r1').innerText = `${Math.round(calcWt * 1)} ml/hr`;
+    }
+
+    function resetTriageForm() {
+      document.getElementById('in-age').value = 32;
+      document.getElementById('in-weight').value = 65;
+      document.getElementById('in-day').value = 4;
+      document.getElementById('in-sbp').value = 114;
+      document.getElementById('in-dbp').value = 78;
+      document.getElementById('in-hr').value = 84;
+      document.getElementById('in-crt').value = 'normal';
+      document.getElementById('in-temp').value = 'warm';
+      document.getElementById('in-pulsevol').value = 'good';
+      document.getElementById('in-urine').value = 'adequate';
+      document.getElementById('in-hct').value = 42;
+      document.getElementById('in-plt').value = 128;
+      document.getElementById('in-wcc').value = 3.4;
+      document.getElementById('in-ast').value = 48;
+      
+      const checks = ['ws-abd', 'ws-vomit', 'ws-lethargy', 'ws-bleed', 'ws-fluid', 'ws-liver', 'co-preg', 'co-dm', 'co-htn', 'co-ckd', 'co-heart', 'co-social'];
+      checks.forEach(c => document.getElementById(c).checked = false);
+
+      runEvaluation();
+      interpretSerology();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      runEvaluation();
+      interpretSerology();
+      calcFluidQuota();
+    });
+  </script>
+</body>
+</html>
