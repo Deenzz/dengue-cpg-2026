@@ -95,6 +95,26 @@
     html.dark nav .bg-white{background-color:#3a4156}
     html.dark .hover\:bg-slate-50:hover,html.dark .hover\:bg-slate-100:hover{background-color:#262b3b}
     html.dark thead tr{background-color:#232736}
+    @media (max-width:640px){
+      html{-webkit-text-size-adjust:100%}
+      body{-webkit-tap-highlight-color:transparent}
+      header{position:static!important}
+      header>div{justify-content:center!important;text-align:center;padding-top:14px}
+      header>div>div:first-child{flex-direction:column;width:100%;gap:.5rem}
+      header>div>div:first-child .flex{justify-content:center;flex-wrap:wrap}
+      header>div>div.no-print{width:100%;justify-content:center}
+      header nav{position:fixed;left:0;right:0;bottom:0;z-index:60;width:100%;border-radius:0;gap:2px;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 16px rgba(0,0,0,.12);border-top:1px solid rgba(148,163,184,.35)}
+      header nav button{flex:1;flex-direction:column;gap:2px;padding:6px 2px;min-width:0;justify-content:center;font-size:10px;line-height:1.15}
+      header nav button svg{width:22px;height:22px}
+      main{padding-left:12px;padding-right:12px;padding-bottom:11rem}
+      footer{padding-bottom:6rem}
+      main input:not([type=checkbox]),main select{font-size:16px!important;min-height:44px}
+      main input[type=checkbox]{width:20px;height:20px;flex-shrink:0}
+      main label.flex{padding-top:10px;padding-bottom:10px}
+      main .text-xs{font-size:13px;line-height:1.5}
+      main .text-\[11px\]{font-size:12px}
+      main .text-\[10px\]{font-size:11px}
+    }
     :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
     @media print{
       header,nav,footer,.no-print{display:none!important}
@@ -157,19 +177,19 @@
         </div>
         <nav class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs sm:text-sm font-medium">
           <button onclick="switchTab('triage')" id="tab-btn-triage" class="px-3 py-1.5 rounded-lg bg-white shadow-sm text-slate-900 flex items-center gap-1.5 transition">
-            <i data-lucide="git-branch" class="w-4 h-4 text-emerald-600"></i> Flowchart & Triage
+            <i data-lucide="git-branch" class="w-4 h-4 text-emerald-600"></i> <span class="hidden sm:inline">Flowchart & Triage</span><span class="sm:hidden">Triage</span>
           </button>
           <button onclick="switchTab('labs')" id="tab-btn-labs" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
-            <i data-lucide="flask-conical" class="w-4 h-4 text-sky-600"></i> Labs & Red Flags
+            <i data-lucide="flask-conical" class="w-4 h-4 text-sky-600"></i> <span class="hidden sm:inline">Labs & Red Flags</span><span class="sm:hidden">Labs</span>
           </button>
           <button onclick="switchTab('fluid')" id="tab-btn-fluid" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
-            <i data-lucide="droplet" class="w-4 h-4 text-blue-600"></i> 48h Fluid Quota
+            <i data-lucide="droplet" class="w-4 h-4 text-blue-600"></i> <span class="hidden sm:inline">48h Fluid Quota</span><span class="sm:hidden">Fluids</span>
           </button>
           <button onclick="switchTab('reasoning')" id="tab-btn-reasoning" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
-            <i data-lucide="brain" class="w-4 h-4 text-purple-600"></i> Clinical Reasoning
+            <i data-lucide="brain" class="w-4 h-4 text-purple-600"></i> <span class="hidden sm:inline">Clinical Reasoning</span><span class="sm:hidden">Reasoning</span>
           </button>
           <button onclick="switchTab('homecare')" id="tab-btn-homecare" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
-            <i data-lucide="printer" class="w-4 h-4 text-amber-600"></i> Patient Leaflet
+            <i data-lucide="printer" class="w-4 h-4 text-amber-600"></i> <span class="hidden sm:inline">Patient Leaflet</span><span class="sm:hidden">Leaflet</span>
           </button>
         </nav>
       </div>
@@ -808,6 +828,7 @@
       </section>
 
     </main>
+    <button id="m-result" type="button" onclick="document.getElementById('disposition-card').scrollIntoView({behavior:'smooth',block:'start'})" class="sm:hidden fixed left-3 right-3 z-[55] rounded-xl px-4 py-3 text-sm font-bold text-white shadow-lg flex items-center justify-between bg-emerald-600" style="bottom:calc(70px + env(safe-area-inset-bottom,0px))"><span id="m-result-text">Result</span><span class="text-xs font-semibold opacity-90">Tap for plan &rsaquo;</span></button>
     <footer class="max-w-7xl mx-auto px-4 pb-6 text-[11px] text-slate-500 leading-relaxed no-print">
       Unofficial decision-support aid based on MOH Malaysia, <i>Management of Dengue in Adults (4th Edition)</i>. It does not replace clinical judgement, local protocols or specialist advice. Check results against the CPG. Nothing entered here is stored or sent anywhere.
     </footer>
@@ -828,6 +849,9 @@
       const activeBtn = document.getElementById(`tab-btn-${tabId}`);
       activeBtn.classList.add('bg-white', 'shadow-sm', 'text-slate-900');
       activeBtn.classList.remove('text-slate-600');
+      const mr = document.getElementById('m-result');
+      if (mr) mr.style.display = (tabId === 'triage') ? '' : 'none';
+      window.scrollTo({ top: 0 });
     }
 
     const $ = (id) => document.getElementById(id);
@@ -936,6 +960,12 @@
         items += li('text-emerald-600','check-circle-2','<b>Home care advice:</b> give the take-home leaflet (Appendix 5B) and teach the warning signs. Return immediately if any appear, especially as fever subsides.');
       }
       $('action-list').innerHTML = items + notes.join('');
+      const mr = $('m-result');
+      if (mr) {
+        const bgc = (badge.className.match(/bg-\w+-600/) || ['bg-slate-600'])[0];
+        mr.className = 'sm:hidden fixed left-3 right-3 z-[55] rounded-xl px-4 py-3 text-sm font-bold text-white shadow-lg flex items-center justify-between ' + bgc;
+        $('m-result-text').innerText = badge.innerText.trim();
+      }
       lucide.createIcons();
     }
 
